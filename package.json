@@ -1,0 +1,10 @@
+{
+  "name": "fetchify",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc --watch"
+  },
+  "author": "",
+  "license": "ISC"
+}
