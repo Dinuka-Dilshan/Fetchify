@@ -51,4 +51,15 @@ fetchify
 .catch((error) => console.log(error));
 
 
+//example cancel Request
+fetchify
+  .GET({
+    URL: "/todos",
+    cancelKey:'cancelKeyName'
+  })
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => console.log(error));
 
+  fetchify.cancel('cancelKeyName')
