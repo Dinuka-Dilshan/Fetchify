@@ -1,3 +1,6 @@
+import requestBuilder from "./Request.js";
+import { FetchifyRequest } from "./types";
+
 let baseURL: string | undefined;
 let headers: HeadersInit | undefined;
 const controllers = new Map<string, AbortController>();
@@ -7,34 +10,18 @@ const init = (init: { baseURL?: string; headers?: HeadersInit }) => {
   headers = init.headers;
 };
 
-const queryStringParamsBuilder = (params: { [key: string]: any }) => {
-  return Object.keys(params).reduce((url, key, index) => {
-    if (index === 0) {
-      return `${url}${key}=${params[key]}`;
-    }
-    return `${url}&${key}=${params[key]}`;
-  }, "?");
-};
+const GET = (init: Omit<FetchifyRequest, "method" | "data" | "files">) => {
+  const { url, ...rest } = requestBuilder({
+    controllers,
+    method: "GET",
+    url: init.url,
+    queryStringParams: init.queryStringParams,
+    cancelKey: init.cancelKey,
+    headers: init.headers || headers,
+    baseURL,
+  });
 
-const GET = (init: {
-  URL: string;
-  params?: { [key: string]: any };
-  cancelKey?: string;
-}) => {
-  const fullURL = baseURL
-    ? init.params
-      ? `${baseURL}${init.URL}${queryStringParamsBuilder(init.params)}`
-      : `${baseURL}${init.URL}`
-    : init.URL;
-
-  if (init.cancelKey) {
-    controllers.set(init.cancelKey, new AbortController());
-  }
-
-  return fetch(fullURL, {
-    headers,
-    signal: init.cancelKey ? controllers.get(init.cancelKey)?.signal : null,
-  })
+  return fetch(url, rest)
     .then((res) => {
       if (res.ok) {
         return res.json();
@@ -47,37 +34,19 @@ const GET = (init: {
     });
 };
 
-const POST = (init: {
-  URL: string;
-  params?: { [key: string]: any };
-  cancelKey?: string;
-  data?: { [key: string]: any };
-  files?: { [key: string]: any };
-}) => {
-  const fullURL = baseURL
-    ? init.params
-      ? `${baseURL}${init.URL}${queryStringParamsBuilder(init.params)}`
-      : `${baseURL}${init.URL}`
-    : init.URL;
-
-  if (init.cancelKey) {
-    controllers.set(init.cancelKey, new AbortController());
-  }
-
-  let body;
-
-  if (!!init.files) {
-    body = formDataBuilder({ ...init.files, ...init.data });
-  } else {
-    body = JSON.stringify(init.data);
-  }
-
-  return fetch(fullURL, {
+const POST = (init: Omit<FetchifyRequest, "method" | "queryStringParams">) => {
+  const { url, ...rest } = requestBuilder({
+    controllers,
     method: "POST",
-    headers,
-    body,
-    signal: init.cancelKey ? controllers.get(init.cancelKey)?.signal : null,
-  })
+    url: init.url,
+    cancelKey: init.cancelKey,
+    headers: { ...headers, ...init.headers },
+    baseURL,
+    data: init.data,
+    files: init.files,
+  });
+
+  return fetch(url, rest)
     .then((res) => {
       if (res.ok) {
         return res.json();
@@ -88,17 +57,14 @@ const POST = (init: {
     .catch((error) => {
       return Promise.reject(error);
     });
-};
-
-const formDataBuilder = (data: { [key: string]: any }) => {
-  const formData = new FormData();
-  Object.keys(data).forEach((key) => formData.append(key, data[key]));
-  return formData;
 };
 
 export default {
   init,
   GET,
   POST,
-  cancel: (cancelKey: string) => controllers.get(cancelKey)?.abort(),
+  cancel: (cancelKey: string) => {
+    controllers.get(cancelKey)?.abort();
+    controllers.delete(cancelKey);
+  },
 };
