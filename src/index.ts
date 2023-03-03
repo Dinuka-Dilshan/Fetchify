@@ -7,59 +7,58 @@ fetchify.init({
 //example with GET
 fetchify
   .GET({
-    URL: "/todos",
+    url: "/todos",
   })
   .then((data) => {
     console.log(data);
   })
   .catch((error) => console.log(error));
 
-  //example with GET query string params
+//example with GET query string params
 fetchify
-.GET({
-  URL: "/todos",
-  params:{age:25,country:'LK'}
-})
-.then((data) => {
-  console.log(data);
-})
-.catch((error) => console.log(error));
+  .GET({
+    url: "/todos",
+    queryStringParams: { age: 25, country: "LK" },
+  })
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => console.log(error));
 
 //example with POST
 fetchify
-.POST({
-  URL: "/users",
-  data:{name:'NINA',age:25}
-})
-.then((data) => {
-  console.log(data);
-})
-.catch((error) => console.log(error));
+  .POST({
+    url: "/users",
+    data: { name: "NINA", age: 25 },
+  })
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => console.log(error));
 
 //example with POST - File upload
 fetchify
-.POST({
-  URL: "/users",
-  data:{name:'NINA',age:25},
-  files:{
-    file:new File(['text'],'text.txt',{type:'text'})
-  }
-})
-.then((data) => {
-  console.log(data);
-})
-.catch((error) => console.log(error));
-
+  .POST({
+    url: "/users",
+    data: { name: "NINA", age: 25 },
+    files: {
+      file: new File(["text,ejheqehqe"], "text.txt", { type: "text" }),
+    },
+  })
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => console.log(error));
 
 //example cancel Request
 fetchify
   .GET({
-    URL: "/todos",
-    cancelKey:'cancelKeyName'
+    url: "/todos",
+    cancelKey: "cancelKeyName",
   })
   .then((data) => {
     console.log(data);
   })
   .catch((error) => console.log(error));
 
-  fetchify.cancel('cancelKeyName')
+fetchify.cancel("cancelKeyName");
