@@ -18,8 +18,8 @@ Initialize `fetchify` with basic configurations.
 	    url:  "/url",
 	    queryStringParams: { age:  25, country:  "LK" },
 	  })
-      .then((data) => {
-       console.log(data);
+      .then((response) => {
+       console.log(response);
       })
      .catch((error) =>  console.log(error));
 
@@ -37,8 +37,8 @@ You can provide files and data values directly and `fetchify` will automatically
 	     file2:  new  File(),
         },
     })
-    .then((data) => {
-       console.log(data);
+    .then((response) => {
+       console.log(response);
     })
     .catch((error) =>  console.log(error));
 	
@@ -53,8 +53,8 @@ You can cancel a request by providing a string as a cancel key. Internally `fetc
 	    data: { name:  "NINA", age:  25 },
 	    cancelKey:  "cancelKeyName",
     })
-    .then((data) => {
-       console.log(data);
+    .then((response) => {
+       console.log(response);
     })
     .catch((error) =>  console.log(error));
 
