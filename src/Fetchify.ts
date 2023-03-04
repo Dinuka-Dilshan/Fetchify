@@ -1,4 +1,5 @@
 import requestBuilder from "./Request.js";
+import responseBuilder from "./Response.js";
 import { FetchifyRequest } from "./types";
 
 let baseURL: string | undefined;
@@ -21,17 +22,7 @@ const GET = (init: Omit<FetchifyRequest, "method" | "data" | "files">) => {
     baseURL,
   });
 
-  return fetch(url, rest)
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(res);
-      }
-    })
-    .catch((error) => {
-      return Promise.reject(error);
-    });
+  return fetch(url, rest).then(responseBuilder);
 };
 
 const POST = (init: Omit<FetchifyRequest, "method" | "queryStringParams">) => {
@@ -46,17 +37,7 @@ const POST = (init: Omit<FetchifyRequest, "method" | "queryStringParams">) => {
     files: init.files,
   });
 
-  return fetch(url, rest)
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(res);
-      }
-    })
-    .catch((error) => {
-      return Promise.reject(error);
-    });
+  return fetch(url, rest).then(responseBuilder);
 };
 
 export default {
