@@ -25,7 +25,7 @@ Initialize `fetchify` with basic configurations.
 
 ## POST Request
 
-You can provide files and data values directly and `fetchify` will automatically convert then to FormData values if you provide files, otherwise it will convert to JSON.
+You can provide files and data values directly and `fetchify` will automatically convert them to FormData values if you provide files, otherwise it will convert to JSON.If you provide both files and data, `fetchify` will convert them all into  FormData values.
 	
 
 
